@@ -17,6 +17,6 @@ res.send('🚀🚀🚀🚀')
 app.use('/api/participants', require('./routes/participantRoutes'));
 
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0',() => {
   console.log(`Server is running on port ${port}`);
 });
