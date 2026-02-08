@@ -11,7 +11,6 @@ const participantSchema = new mongoose.Schema(
   // ⭐ list number (1, 2, 3...)
  listNumber: {
   type: Number,
-  unique: true,
   sparse: true,   // ⭐ IMPORTANT FIX
   default: null
 }
