@@ -10,11 +10,20 @@ async function getBrowser() {
       console.log("Launching Puppeteer browser...");
 
       browserInstance = await puppeteer.launch({
+
         headless: true,
+
         args: [
           "--no-sandbox",
-          "--disable-setuid-sandbox"
+          "--disable-setuid-sandbox",
+
+          // VERY IMPORTANT for Ubuntu server
+          "--disable-dev-shm-usage",
+          "--disable-gpu",
+          "--no-zygote",
+          "--single-process"
         ]
+
       });
 
       browserInstance.on("disconnected", () => {
