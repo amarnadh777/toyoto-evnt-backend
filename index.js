@@ -24,12 +24,8 @@ app.get('/', (req, res) => {
 app.use('/api/participants', require('./routes/participantRoutes'));
 
 // SSL options
-const sslOptions = {
-  key: fs.readFileSync("./key.pem"),
-  cert: fs.readFileSync("./cert.pem"),
-};
 
 // ✅ Create HTTPS server (IMPORTANT FIX)
-https.createServer(sslOptions, app).listen(port, '0.0.0.0', () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`🔐 HTTPS Server running on https://localhost:${port}`);
 });
