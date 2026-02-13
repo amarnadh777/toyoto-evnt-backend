@@ -42,96 +42,96 @@ try {
 
 
 
-exports.updateParticipant = async (req, res) => {
+  exports.updateParticipant = async (req, res) => {
 
-  try {
+    try {
 
-    const participantId = req.params.participantId;
+      const participantId = req.params.participantId;
 
-    const {
-      name,
-      email,
-      phone,
-      checkedIn
-    } = req.body;
-
-    // Find participant
-    const participant = await Participant.findById(participantId);
-
-    if (!participant) {
-      return res.status(404).json({
-        message: "Participant not found"
-      });
-    }
-
-    // Email duplicate check
-    if (email && email !== participant.email) {
-
-      const emailExists = await Participant.findOne({
+      const {
+        name,
         email,
-        _id: { $ne: participantId }
-      });
+        phone,
+        checkedIn
+      } = req.body;
 
-      if (emailExists) {
-        return res.status(400).json({
-          message: "Email already exists"
+      // Find participant
+      const participant = await Participant.findById(participantId);
+
+      if (!participant) {
+        return res.status(404).json({
+          message: "Participant not found"
         });
       }
 
-      participant.email = email;
+      // Email duplicate check
+      if (email && email !== participant.email) {
 
-    }
+        const emailExists = await Participant.findOne({
+          email,
+          _id: { $ne: participantId }
+        });
 
-    // Update basic fields
-    if (name !== undefined)
-      participant.name = name;
+        if (emailExists) {
+          return res.status(400).json({
+            message: "Email already exists"
+          });
+        }
 
-    if (phone !== undefined)
-      participant.phone = phone;
-
-    // Handle check-in / check-out
-    if (checkedIn !== undefined) {
-
-      participant.checkedIn = checkedIn;
-
-      if (checkedIn === true) {
-
-        // Set check-in time if not already set
-        participant.checkedInAt =
-          participant.checkedInAt || new Date();
-
-      }
-      else {
-
-        // Reset check-in time on checkout
-        participant.checkedInAt = null;
+        participant.email = email;
 
       }
 
+      // Update basic fields
+      if (name !== undefined)
+        participant.name = name;
+
+      if (phone !== undefined)
+        participant.phone = phone;
+
+      // Handle check-in / check-out
+      if (checkedIn !== undefined) {
+
+        participant.checkedIn = checkedIn;
+
+        if (checkedIn === true) {
+
+          // Set check-in time if not already set
+          participant.checkedInAt =
+            participant.checkedInAt || new Date();
+
+        }
+        else {
+
+          // Reset check-in time on checkout
+          participant.checkedInAt = null;
+
+        }
+
+      }
+
+      await participant.save();
+
+      res.status(200).json({
+
+        message: "Participant updated successfully",
+
+        participant
+
+      });
+
+    }
+    catch (error) {
+
+      console.error("Update error:", error);
+
+      res.status(500).json({
+        message: "Server error"
+      });
+
     }
 
-    await participant.save();
-
-    res.status(200).json({
-
-      message: "Participant updated successfully",
-
-      participant
-
-    });
-
-  }
-  catch (error) {
-
-    console.error("Update error:", error);
-
-    res.status(500).json({
-      message: "Server error"
-    });
-
-  }
-
-};
+  };
 
 
 exports.deleteParticipant = async (req, res) => {
@@ -614,6 +614,13 @@ body {
 
     `;
 
+
+    const cleanName = participant.name
+  .trim()
+  .replace(/\s+/g, "_")
+  .replace(/[^a-zA-Z0-9_]/g, "");
+
+const fileName = `${cleanName}_ToyotaEvent2026.pdf`;
     // Get shared browser
     const browser = await getBrowser();
 
@@ -648,9 +655,13 @@ body {
       "Content-Type": "application/pdf",
       "Content-Length": pdfBuffer.length,
       "Content-Disposition":
-        `attachment; filename=ticket-${participant.name}.pdf`
+        `attachment; filename=${fileName}.pdf`
 
     });
+
+
+
+
 
     res.send(pdfBuffer);
 
