@@ -1,44 +1,44 @@
-const mongoose = require('mongoose');
+  const mongoose = require('mongoose');
 
-const participantSchema = new mongoose.Schema(
-{
-  name: { type: String, required: true },
+  const participantSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
 
-  email: { type: String, trim: true, lowercase: true },
+    email: { type: String, trim: true, lowercase: true },
 
-  phone: { type: String, trim: true },
+    phone: { type: String, trim: true },
 
-  // ⭐ list number (1, 2, 3...)
- listNumber: {
-  type: Number,
-  sparse: true,   // ⭐ IMPORTANT FIX
-  default: null
-}
-,
-
-  checkedIn: {
-    type: Boolean,
-    default: false
-  },
-
-  checkedInAt: {
-    type: Date,
+    // ⭐ list number (1, 2, 3...)
+  listNumber: {
+    type: Number,
+    sparse: true,   // ⭐ IMPORTANT FIX
     default: null
-  },
-
-  qrCode: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true
   }
+  ,
 
-},
-{
-  timestamps: true
-}
-);
+    checkedIn: {
+      type: Boolean,
+      default: false
+    },
 
-const Participant = mongoose.model('Participant', participantSchema);
+    checkedInAt: {
+      type: Date,
+      default: null
+    },
 
-module.exports = Participant;
+    qrCode: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true
+    }
+
+  },
+  {
+    timestamps: true
+  }
+  );
+
+  const Participant = mongoose.model('Participant', participantSchema);
+
+  module.exports = Participant;

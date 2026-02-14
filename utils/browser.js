@@ -25,6 +25,9 @@ async function getBrowser() {
 
       });
 
+
+
+      
       browserInstance.on("disconnected", () => {
         console.log("Browser disconnected. Resetting...");
         browserInstance = null;

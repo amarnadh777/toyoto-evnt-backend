@@ -5,6 +5,31 @@ const puppeteer = require('puppeteer');
 const getBrowser = require('../utils/browser');
 const fs = require('fs');
 const path = require('path');
+const templatePath = path.join(__dirname, "../pdfTemplate/qrCode.html");
+
+
+const logoPath = path.join(__dirname, "../pdfTemplate/Group 122.png");
+const bgPath = path.join(__dirname, "../pdfTemplate/RAV4 2026 Invitation_Selected 1.jpg");
+
+
+
+
+
+
+const logoBase64 = fs.readFileSync(path.join(__dirname, "../pdfTemplate/Group 122.png"), "base64");
+const bgBase64 = fs.readFileSync(path.join(__dirname, "../pdfTemplate/RAV4 2026 Invitation_Selected 1.jpg"), "base64");
+const descriptionTextBase64 = fs.readFileSync(path.join(__dirname, "../pdfTemplate/image_text_main.png"), "base64");
+const scanTextBase64 = fs.readFileSync(path.join(__dirname, "../pdfTemplate/text_under_Car.svg"), "base64");
+const footerSloganBase64 = fs.readFileSync(path.join(__dirname, "../pdfTemplate/bottom_text.svg"), "base64");
+// const logoUrl = `file://${logoPath}`;
+// const bgUrl = `file://${bgPath}`;
+const bgUrl = `data:image/jpeg;base64,${bgBase64}`;
+
+const logoUrl = `data:image/png;base64,${logoBase64}`;
+const descriptionTextUrl = `data:image/png;base64,${descriptionTextBase64}`;
+const scanTextUrl =`data:image/svg+xml;base64,${scanTextBase64}`;
+const footerSlogan = `data:image/svg+xml;base64,${footerSloganBase64}`
+
 exports.createParticipant = async (req, res) => {
 try {
     const { name, email, phone } = req.body;
@@ -298,17 +323,13 @@ exports.getParticipantsDataForAdmin = async(req,res) => {
 
 
 
-
 exports.generatePdf = async (req, res) => {
-
   let page = null;
 
   try {
-
-
-
     const participantId = req.params.participantId;
-    console.log("Generating Ticket PDF...",participantId);
+    console.log("Generating Ticket PDF...", participantId);
+    
     // Fetch participant
     const participant = await Participant.findById(participantId);
 
@@ -316,358 +337,82 @@ exports.generatePdf = async (req, res) => {
       return res.status(404).send("Participant not found");
     }
 
-    // Generate QR image
-    const qrImage = await QRCode.toDataURL(
-      participant.qrCode || participant._id.toString()
-    );
-
-    // HTML template
-    const htmlContent = `
-   <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Event Ticket</title>
-
-<style>
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-
-  margin: 0;
-  padding: 0;
-
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-
-  height: 100vh;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-family: "Segoe UI", Arial, sans-serif;
-
-}
-
-
-/* Ticket Card */
-.ticket {
-
-  width: 340px;
-
-  background: white;
-
-  border-radius: 20px;
-
-  overflow: hidden;
-
-  box-shadow:
-    0 20px 40px rgba(0,0,0,0.25);
-
-  position: relative;
-
-}
-
-
-/* Header */
-.ticket-header {
-
-  background: linear-gradient(90deg, #2563eb, #4f46e5);
-
-  color: white;
-
-  padding: 20px;
-
-  text-align: center;
-
-}
-
-.ticket-header h1 {
-
-  margin: 0;
-  font-size: 22px;
-  letter-spacing: 1px;
-
-}
-
-.ticket-header p {
-
-  margin: 5px 0 0;
-  font-size: 13px;
-  opacity: 0.9;
-
-}
-
-
-/* Body */
-.ticket-body {
-
-  padding: 25px;
-
-  text-align: center;
-
-}
-
-
-/* QR Box */
-.qr-box {
-
-  background: #f8fafc;
-
-  border-radius: 16px;
-
-  padding: 15px;
-
-  border: 2px dashed #cbd5e1;
-
-  display: inline-block;
-
-  margin-bottom: 20px;
-
-}
-
-
-
-.qr-box img {
-
-  width: 280px;
-  height: 300px;
-
-}
-
-
-
-
-/* Participant Name */
-.name {
-
-  font-size: 22px;
-
-  font-weight: bold;
-
-  color: #0f172a;
-
-}
-
-
-/* Participant ID */
-.id {
-
-  font-size: 13px;
-
-  color: #64748b;
-
-  margin-top: 5px;
-
-}
-
-
-/* Divider */
-.divider {
-
-  margin: 20px 0;
-
-  border-top: 1px dashed #e2e8f0;
-
-}
-
-
-/* Info Section */
-.info {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  font-size: 12px;
-
-  color: #334155;
-
-}
-
-.info div {
-
-  text-align: center;
-
-}
-
-
-/* Footer */
-.ticket-footer {
-
-  background: #f1f5f9;
-
-  padding: 15px;
-
-  text-align: center;
-
-  font-size: 12px;
-
-  color: #475569;
-
-}
-
-
-/* Decorative circles */
-.ticket::before,
-.ticket::after {
-
-  content: "";
-
-  position: absolute;
-
-  width: 20px;
-  height: 20px;
-
-  background: #0f172a;
-
-  border-radius: 50%;
-
-  top: 50%;
-
-  transform: translateY(-50%);
-
-}
-
-.ticket::before {
-
-  left: -10px;
-
-}
-
-.ticket::after {
-
-  right: -10px;
-
-}
-
-</style>
-</head>
-
-
-<body>
-
-
-<div class="ticket">
-
-
-  <!-- Header -->
-  <div class="ticket-header">
-
-    <h1>EVENT PASS</h1>
-
-    <p>Official Entry Ticket</p>
-
-  </div>
-
-
-  <!-- Body -->
-  <div class="ticket-body">
-
-
-    <!-- QR Code -->
-    <div class="qr-box">
-
-      <!-- Replace this src dynamically -->
-      <img src="${qrImage}" />
-
-    </div>
-
-
-    <!-- Name -->
-    <div class="name">
-
-      ${participant.name}
-
-    </div>
-
-
-    <!-- ID -->
-   
-
-
-    <div class="divider"></div>
-
-
-
-  </div>
-
-
-  <!-- Footer -->
-  <div class="ticket-footer">
-
-    Please present this QR code at entry gate
-
-  </div>
-
-
-</div>
-
-
-</body>
-</html>
-
-    `;
-
+    // Generate QR image as a base64 Data URL
+   const qrImage = await QRCode.toDataURL(
+    participant.qrCode || participant._id.toString(), 
+    {
+        margin: 1,      // Tightens the white border around the code
+        width: 400,     // Higher resolution for PDF printing
+        color: {
+            dark: '#FFFFFF',  // Makes the QR dots/squares WHITE
+            light: '#00000000' // Makes the background TRANSPARENT
+        }
+    }
+);
 
     const cleanName = participant.name
-  .trim()
-  .replace(/\s+/g, "_")
-  .replace(/[^a-zA-Z0-9_]/g, "");
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^a-zA-Z0-9_]/g, "");
 
-const fileName = `${cleanName}_ToyotaEvent2026.pdf`;
+    const fileName = `${cleanName}_ToyotaEvent2026.pdf`;
+    
     // Get shared browser
     const browser = await getBrowser();
 
-    // Create new page (IMPORTANT)
+    // Create new page
     page = await browser.newPage();
 
+    // Set viewport to match mobile screen ticket dimensions
     await page.setViewport({
       width: 428,
       height: 926,
       deviceScaleFactor: 2
     });
 
+    // Read and replace HTML content dynamically
+    let htmlContent = fs.readFileSync(templatePath, "utf-8");
+    htmlContent = htmlContent
+      .replace("{{LOGO}}", logoUrl)
+      .replace("{{BACKGROUND}}", bgUrl)
+      .replace("{{NAME}}", participant.name)
+      .replace("{{DESC_IMAGE}}", descriptionTextUrl)
+      .replace("{{SCAN_TEXT}}", scanTextUrl)
+    .replace("{{FOOTER_SLOGAN}}", footerSlogan)
+       .replace("{{QR_CODE}}", qrImage); 
+
+      
     await page.setContent(htmlContent, {
-      waitUntil: "networkidle0"
+      waitUntil: "networkidle0" // Waits until all resources are fully loaded
     });
 
-    // Generate PDF
+    // Generate PDF with ZERO margins and forced CSS Page Size
     const pdfBuffer = await page.pdf({
-
       width: "428px",
       height: "926px",
-      printBackground: true
-
+      printBackground: true,
+      preferCSSPageSize: true, // IMPORTANT: Forces Puppeteer to respect the CSS @page size
+      margin: {
+        top: '0px',
+        right: '0px',
+        bottom: '0px',
+        left: '0px'
+      }
     });
 
-    // Close page only (NOT browser)
+    // Close page only
     await page.close();
 
     // Send PDF
     res.set({
-
       "Content-Type": "application/pdf",
       "Content-Length": pdfBuffer.length,
-      "Content-Disposition":
-        `attachment; filename=${fileName}.pdf`
-
+      "Content-Disposition": `attachment; filename=ticket-${fileName}.pdf`
     });
-
-
-
-
 
     res.send(pdfBuffer);
 
-  }
-  catch (error) {
-
+  } catch (error) {
     console.error("PDF Generation Error:", error);
 
     if (page) await page.close();
@@ -675,7 +420,5 @@ const fileName = `${cleanName}_ToyotaEvent2026.pdf`;
     res.status(500).json({
       message: "Error generating PDF"
     });
-
   }
-
 };

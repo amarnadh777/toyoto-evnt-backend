@@ -8,7 +8,10 @@ require('dotenv').config();
 
 app.use(express.json());
 
-app.use(cors({}));
+app.use(cors({
+
+  exposedHeaders: ["Content-Disposition"]
+}));
 
 // Connect to MongoDB
 connectDB();
@@ -30,6 +33,6 @@ const sslOptions = {
 };
 
 // ✅ Create HTTPS server (IMPORTANT FIX)
- app.listen(port, '0.0.0.0', () => {
+https.createServer(sslOptions, app).listen(port, '0.0.0.0', () => {
   console.log(`🔐 HTTPS Server running on https://localhost:${port}`);
 });
