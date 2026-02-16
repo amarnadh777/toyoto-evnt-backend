@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toyota RAV4 2026 - Poster</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('./Univers\ Next\ Arabic\ Regular.ttf') format('truetype'); 
+            font-weight: normal;
+            font-style: normal;
+        }
 
         /* 1. Force exact rendering and color accuracy for PDF */
         * {
@@ -31,8 +36,8 @@
             justify-content: center;
             align-items: center;
             background-color: #111111; 
-            font-family: 'Cairo', sans-serif;
-            overflow: auto; /* Allows scrolling if viewed on a small laptop */
+            font-family: 'MyCustomFont', sans-serif;
+            overflow: auto; 
         }
 
         /* 4. The main Figma canvas replica */
@@ -40,20 +45,16 @@
             width: 794px;  
             height: 1123px; 
             background-color: #03050a;
-            
-            /* background-size: 100% 100% ensures your background image maps exactly to the corners */
-            background-image: url("{{BACKGROUND}}");
-            /* background-image: url("./RAV4\ 2026\ Invitation_Selected\ 1.jpg"); */
-
+            /* background-image: url("./RAV4 2026 Invitation_Selected 1.jpg"); */
+          background-image: url({{BACKGROUND}});
             background-size: 100% 100%; 
             background-position: center;
             background-repeat: no-repeat;
-            
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center; /* Centers everything perfectly */
-            padding: 55px 50px; /* Exact top padding from Figma */
+            padding: 55px 50px; 
             color: #ffffff;
             box-shadow: 0 0 40px rgba(0,0,0,0.8); 
         }
@@ -63,7 +64,7 @@
             width: 100%;
             display: flex;
             justify-content: center;
-            margin-bottom: 45px; /* Exact spacing below logos */
+            margin-bottom: 45px; 
         }
 
         .header img {
@@ -76,13 +77,13 @@
             display: flex;
             justify-content: center;
             width: 100%;
-            margin-bottom: 45px; /* Exact spacing below name */
+            margin-bottom: 45px; 
         }
 
         .name-box {
-              font-size: 40px; 
-                display: inline-block;
-                  white-space: nowrap;
+            font-size: 40px; 
+            display: inline-block;
+            white-space: nowrap;
             font-weight: 900;
             text-align: center;
             color: #ffffff;
@@ -90,54 +91,52 @@
             padding: 2px 40px 10px 40px; 
             border-top: 2.5px solid rgba(255, 255, 255, 0.45); 
             border-bottom: 2.5px solid rgba(255, 255, 255, 0.45); 
-            /* min-width: 360px;  */
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        /* --- Description Image --- */
-       .description-image-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 40px;
-    margin-top: -30px; /* Pulls the image UP */
-}
-
-        .description-image-container img {
-            max-width: 90%; 
-            height: auto;
-            object-fit: contain;
-        }
-
-        /* --- RAV4 Text --- */
-        .car-title-section {
+        /* --- Description Text --- */
+        .description-text-container {
+            width: 100%;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: -15px; /* Pulls car closer to text like Figma */
+            justify-content: center;
+            margin-bottom: 40px;
+            margin-top: -10px;
             z-index: 3;
         }
 
-        .car-title-section img {
-            max-width: 250px;
-            height: auto;
-            margin-bottom: 10px;
-        }
-
-        /* --- Car Image --- */
-        .car-stage {
+        /* CHANGED: Made this a flex column to perfectly center text and images */
+        .description-text {
+            max-width: 580px;
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 1.5;
+            text-align: center;
             display: flex;
-            justify-content: center;
-            width: 100%;
-            margin-bottom: 40px; /* Exact gap between car and scan text */
-            z-index: 2;
+            flex-direction: column;
+            align-items: center; /* Forces logo and text to the center */
         }
 
-        .car-stage img {
-            width: 105%; /* Makes car span slightly wider than text */
-            max-width: 800px;
+        .description-text p {
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        /* CHANGED: Ensured image acts as a block and centers itself */
+        .description-text img {
+            max-width: 350px; 
             height: auto;
-            filter: drop-shadow(0px 30px 20px rgba(0,0,0,0.9));
+            margin: 15px auto; 
+            display: block;
+        }
+
+        .description-text .highlight {
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: -10px;
+           margin-right: 20px;
+            letter-spacing: 0.5px;
+            
         }
 
         /* --- Middle Section (QR & Instructions) --- */
@@ -148,31 +147,27 @@
             width: 100%;
             z-index: 3;
             margin-bottom: 40px;
-    margin-top: 240px;
+            margin-top: 240px; 
         }
 
-        .scan-instruction-img {
-            max-width: 380px; 
-            height: auto;
-            margin-bottom: 20px; /* Exact gap between instruction and QR */
+        .scan-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            text-align: center;
         }
 
         .qr-code-container {
-            width: 160px; 
-            height: 160px;
+            width: 180px;
+            height: 180px;
+            background-color: #ffffff; 
+            padding: 6px;
+            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-          background-color: #ffffff;
         }
-
-  .qr-code-container {
-    width: 180px;
-    height: 180px;
-    background-color: #ffffff; /* important */
-    padding: 6px;
-    border-radius: 10px;
-}
 
         .qr-code-container img {
             width: 100%;
@@ -184,30 +179,24 @@
         /* --- Footer Section --- */
         .footer {
             position: absolute;
-            bottom: 45px; /* Locks it to the exact bottom-left position */
+            bottom: 45px; 
             left: 50px; 
             z-index: 4;
         }
-
+        
         .footer img {
             max-width: 220px; 
             height: auto;
         }
     </style>
-    
-   
-
 </head>
 <body>
-
-
-   
 
     <div class="poster-container">
         
         <div class="header">
-            <img src="{{LOGO}}" alt="Toyota Logo">
             <!-- <img src="./Group 122.png" alt="Toyota Logo"> -->
+            <img src={{LOGO}} alt="Toyota Logo">
 
         </div>
 
@@ -215,34 +204,39 @@
             <div class="name-box">{{NAME}}</div>
         </div>
 
-        <div class="description-image-container">
-            <img src="{{DESC_IMAGE}}" alt="Description">
-            <!-- <img src="./image_text_main.png" alt="Description"> -->
+        <div class="description-text-container">
+             <div class="description-text">
+                <p>Discovery sets it apart and makes it full of life,
+                We invite you to join us for the launch moment and unveiling of the RAV4 2026,
+                Where boldness meets innovation to create a vibrant driving experience in a vehicle that serves all your ambitions.</p>
+             
+                <!-- <img src="./rav4logo.png" alt="RAV4 2026 Logo"> -->
+                <!-- <img src="./rav4logo.png" alt="RAV4 2026 Logo"> -->
+                <img src={{RAV4LOGO}}  alt="RAV4 2026 Logo">
 
+                
+                <p class="highlight">awaits you with its new look!</p>
+             </div>
         </div>
 
-     
-     
-
         <div class="middle-content">
-            <img src="{{SCAN_TEXT}}" class="scan-instruction-img" alt="Scan Instruction">
-            <!-- <img src="./text_under_Car.svg" class="scan-instruction-img" alt="Scan Instruction"> -->
+             <div class="scan-text">Scan the code below to access the location:</div>
             
-            <div class="qr-code-container">
-                <img src="{{QR_CODE}}" alt="QR Code">
-            </div>
+             <div class="qr-code-container">
+                 <img src="{{QR_CODE}}" alt="QR Code">
+             </div>
         </div>
 
         <div class="footer">
-            <img src="{{FOOTER_SLOGAN}}" alt="Footer Slogan">
             <!-- <img src="./bottom_text.svg" alt="Footer Slogan"> -->
+            <img src={{FOOTER_SLOGAN}} alt="Footer Slogan">
 
         </div>
 
     </div>
-  <script>
-(function () {
 
+<script>
+(function () {
     const nameBox = document.querySelector('.name-box');
     const container = document.querySelector('.name-box-container');
 
@@ -257,7 +251,6 @@
         fontSize--;
         nameBox.style.fontSize = fontSize + "px";
     }
-
 })();
 </script>
 </body>

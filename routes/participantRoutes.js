@@ -9,4 +9,11 @@ router.post("/scan",participantController.scanParticipant);
 router.get("/list",participantController.getParticipantsData);
 router.get("/list-all",participantController.getParticipantsDataForAdmin);
 router.get("/pdf/:participantId",participantController.generatePdf);
+router.get("/pdf-eng/:participantId",participantController.generatePdfEnglish);
+
+router.get("/bulk/pdf/bulk",participantController.generateBulkPdf);
+router.get("/reset-checkIn",participantController.resetAllParticipantsCheckIn);
+
+
+
 module.exports = router;
